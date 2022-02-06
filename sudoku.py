@@ -1,26 +1,29 @@
 import sys
 import time
 def main() -> None:
-    game = Sudoku(sys.argv[1])
-    print("Problem:")
-    print("-"*27)
-    print(game)    
-    tic = time.perf_counter()
-    game.board = brute_force(game.board,0,0)
-    toc = time.perf_counter()
-    print("Solution:")
-    print("-"*27)
-    print(game)
-    print(f"Solved in {toc-tic:0.4f} seconds")
+    name = sys.argv[1]
+    game = Sudoku()
+    for i in range(50):
+        game.board = game.read(name,i)
+        print("Problem:")
+        print("-"*27)
+        print(game)    
+        tic = time.perf_counter()
+        game.board = brute_force(game.board,0,0)
+        toc = time.perf_counter()
+        print("Solution:")
+        print("-"*27)
+        print(game)
+        print(f"Solved in {toc-tic:0.4f} seconds")
 
 def index(x: int, y: int) -> int:
     return x + 9*y
 
 class Sudoku:
-    board = [0 for i in range(81)]
+    board = []
     
-    def __init__(self, file_name: str):
-        self.board = self.read(file_name)
+    def __init__(self):
+        self.board = [0 for i in range(81)]
     
     def __str__(self):
         bffer: str = ""
@@ -28,12 +31,12 @@ class Sudoku:
             bffer += str(self.board[i:i+9]) + "\n"
         return bffer
 
-    def read(self, file_name: str ):
+    def read(self, file_name: str, count: int ):
         board = [0 for i in range(81)]
         with open(file_name) as file:
             lines = file.readlines()
             x,y = 0,0
-            for i in lines:
+            for i in lines[(10*count)+1:(10*count)+1+9]:
                 for j in i:
                     if j != '\n':
                         board[index(x,y)] = int(j)
@@ -127,7 +130,7 @@ def check_valid(board: list[int]) -> (bool,bool):
                     if o != 0:
                         return (False, None)
                 else:
-                    build_check.add(o)
+                    build_check.add(o)``
     return (True,complete_flag)
 
 
